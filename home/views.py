@@ -1,14 +1,13 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from datetime import datetime
 from home.models import Contact
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth import logout, authenticate, login
 
 # Create your views here.
 def index(request):
-  context = {
-     'variable': "Richa is great"
-  }
-  return render(request, 'index.html', context)
+  return render(request, 'index.html')
 
 def about(request):
   return render(request, 'about.html')
@@ -26,3 +25,23 @@ def contact(request):
     contact.save()
     messages.success(request, 'Your message is sent!')
   return render(request, 'contact.html')
+
+def loginUser(request):
+  if request.method == "POST":
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    # check if user has entered correct credentials
+    user = authenticate(username=username, password=password)
+    if user is not None:
+       # A backend authenticated the credentials 
+       login(request, user)
+       return redirect("/")
+    else:
+       # No backend authenticated the credentials
+       return render(request, 'login.html')
+
+  return render(request, 'login.html')
+
+def logoutUser(request):
+  logout(request)
+  return redirect("/login")
