@@ -25,7 +25,8 @@
               <a class="nav-link" href="/about">About Us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/products">Courses</a>
+              <a class="nav-link" href="/courses">Courses</a>
+
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,9 +47,27 @@
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
-          <li class="nav-item d-flex">
-            <a class="nav-link text-white" href="/login">Login</a>
-          </li>
+          {% if user.is_authenticated %}
+          <ul class="navbar-nav mr-2">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Welcome {{request.user}}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              </ul>
+            </li>
+                  </ul>
+          {% else %}
+          <button type="button" class="btn btn-success mx-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+            Login
+          </button>
+          <button type="button" class="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#signupModal">
+            SignUp
+          </button>
+
+          {% endif %}
+
         </div>
       </div>
     </nav>
@@ -63,6 +82,81 @@
     {% endfor %}
     {% endif %}
 
+ <!-- Login modal -->
+ <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModal">Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action='/login' method='post'>
+        <div class="mb-3">
+          <label for="loginusername" class="form-label">Username</label>
+          <input type="text" class="form-control" id="loginusername" name="loginusername" placeholder="Enter your username" required>
+        </div>
+        <div class="mb-3">
+          <label for="loginpass" class="form-label">Password</label>
+          <input type="password" class="form-control" id="loginpass" name="loginpass" placeholder="Enter your password" required>
+        </div>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Signup Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signupModal">SignUp</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action='/signup' method='post'>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Choose a unique username" required>
+        </div>
+        <div class="mb-3">
+          <label for="fname" class="form-label">First Name</label>
+          <input type="text" class="form-control" id="fname" name="fname" placeholder="first name" required>
+        </div>
+        <div class="mb-3">
+          <label for="lname" class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="lname"name="lname" placeholder="last name" required>
+        </div>
+        <div class="mb-3">
+          <label for="email1" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email1" name="email1" placeholder="name@example.com" required>
+        </div>
+        <div class="mb-3">
+          <label for="pass1" class="form-label">Password</label>
+          <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Enter a strong password" required>
+        </div>
+        <div class="mb-3">
+          <label for="pass2" class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Enter your password again" required>
+        </div>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
     {% block body %}{% endblock body %}
     <!-- Optional JavaScript; choose one of the two! -->
 
@@ -76,3 +170,4 @@
     -->
   </body>
 </html>
+
